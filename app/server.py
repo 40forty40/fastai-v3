@@ -61,7 +61,18 @@ async def analyze(request):
     img_bytes = await (img_data['file'].read())
     img = open_image(BytesIO(img_bytes))
     prediction = learn.predict(img)[0]
-    return JSONResponse({'result': str(prediction)})
+    # change the prediction into a string and capitalize it
+# to map it to items to grab the description
+prediction = str(prediction).capitalize()	
+# Items contains the description text for each result
+items = {
+    'Benign': 'You are ok!',
+    'Melanoma': 'Follow up soon with a dermatologist.',
+}
+return JSONResponse({	
+    'result': prediction,	
+    'content': items[prediction]	
+})
 
 
 if __name__ == '__main__':
